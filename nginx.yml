@@ -1,8 +1,14 @@
 ---
-- hosts: all
-  become: yes
-  vars:
-    server_name: "{{ ansible_default_ipv4.address }}"
-    document_root: /var/www/html
-    app_root: html_demo_site-main
+- hosts: webservers 
+  become: True
   tasks:
+      - name: ensure nginx is at the latest version
+        apt: name=nginx state=latest
+      - name: start nginx
+        service:
+          name: nginx
+          state: started
+      - name: Deploy static website
+        copy:
+          src: index.html
+          dest: /var/www/html/
